@@ -3,13 +3,62 @@ mod value;
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand::{rngs::StdRng, Rng, SeedableRng};
     use value::Val;
 
     #[test]
-    fn it_works() {
-        let x = Val::new(2.0);
-        let y = Val::new(2.0);
+    fn addition_works() {
+        let mut rng: StdRng = StdRng::seed_from_u64(42);
+
+        let raw_x = rng.gen::<f64>();
+        let raw_y = rng.gen::<f64>();
+
+        let x = Val::new(raw_x);
+        let y = Val::new(raw_y);
+
         let result = x + y;
-        assert_eq!(result, 4.0);
+        assert_eq!(result, raw_x + raw_y);
+    }
+
+    #[test]
+    fn subtraction_works() {
+        let mut rng: StdRng = StdRng::seed_from_u64(42);
+
+        let raw_x = rng.gen::<f64>();
+        let raw_y = rng.gen::<f64>();
+
+        let x = Val::new(raw_x);
+        let y = Val::new(raw_y);
+
+        let result = x - y;
+        assert_eq!(result, raw_x - raw_y);
+    }
+
+    #[test]
+    fn multiplication_works() {
+        let mut rng: StdRng = StdRng::seed_from_u64(42);
+
+        let raw_x = rng.gen::<f64>();
+        let raw_y = rng.gen::<f64>();
+
+        let x = Val::new(raw_x);
+        let y = Val::new(raw_y);
+
+        let result = x * y;
+        assert_eq!(result, raw_x * raw_y);
+    }
+
+    #[test]
+    fn division_works() {
+        let mut rng: StdRng = StdRng::seed_from_u64(42);
+
+        let raw_x = rng.gen::<f64>();
+        let raw_y = rng.gen::<f64>();
+
+        let x = Val::new(raw_x);
+        let y = Val::new(raw_y);
+
+        let result = x / y;
+        assert_eq!(result, raw_x / raw_y);
     }
 }

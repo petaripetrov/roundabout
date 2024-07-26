@@ -6,7 +6,7 @@
 
 // type PropFn = fn(value: Val);
 
-use std::ops::Add;
+use std::ops::{Add, Div, Mul, Sub};
 
 #[derive(Debug)] // TODO look itno implementing debug manually
 pub struct Val {
@@ -44,6 +44,34 @@ impl Add for Val {
             grad: 0.0 // TODO put the actual grad here
         }
     }
+}
+
+impl Sub for Val {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self {
+        todo!()
+    }
+}
+
+impl Mul for Val {
+    type Output = Self;
+    
+    fn mul(self, rhs: Self) -> Self::Output {
+        todo!()
+    }
+
+    
+}
+
+impl Div for Val {
+    type Output = Self;
+    
+    fn div(self, rhs: Self) -> Self::Output {
+        todo!()
+    }
+
+    
 }
 
 impl PartialEq<f64> for Val{
