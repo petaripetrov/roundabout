@@ -1,10 +1,13 @@
-mod value;
+mod val;
+mod engine;
+
+pub use crate::val::{Val, ArgType};
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use rand::{rngs::StdRng, Rng, SeedableRng};
-    use value::Val;
+    use val::Val;
 
     #[test]
     fn addition_works() {
@@ -58,7 +61,69 @@ mod tests {
         let x = Val::new(raw_x);
         let y = Val::new(raw_y);
 
-        let result = x / y;
+        let result = &x / &y;
         assert_eq!(result, raw_x / raw_y);
+        assert_eq!(result.prev, vec![x, y])
+    }
+
+    #[test]
+    fn addition_child() {
+        let mut rng: StdRng = StdRng::seed_from_u64(42);
+
+        let raw_x = rng.gen::<f64>();
+        let raw_y = rng.gen::<f64>();
+
+        let x = Val::new(raw_x);
+        let y = Val::new(raw_y);
+
+        let result = &x + &y;
+        assert_eq!(result, raw_x + raw_y);
+        assert_eq!(result.prev, vec![x, y])
+    }
+
+    #[test]
+    fn subtraction_child() {
+        let mut rng: StdRng = StdRng::seed_from_u64(42);
+
+        let raw_x = rng.gen::<f64>();
+        let raw_y = rng.gen::<f64>();
+
+        let x = Val::new(raw_x);
+        let y = Val::new(raw_y);
+
+        let result = &x - &y;
+        assert_eq!(result, raw_x - raw_y);
+        assert_eq!(result.prev, vec![x, y])
+    }
+
+    #[test]
+    fn multiplication_child() {
+        let mut rng: StdRng = StdRng::seed_from_u64(42);
+
+        let raw_x = rng.gen::<f64>();
+        let raw_y = rng.gen::<f64>();
+
+        let x = Val::new(raw_x);
+        let y = Val::new(raw_y);
+
+        let result = &x * &y;
+        assert_eq!(result, raw_x * raw_y);
+        assert_eq!(result.prev, vec![x, y])
+
+    }
+
+    #[test]
+    fn division_child() {
+        let mut rng: StdRng = StdRng::seed_from_u64(42);
+
+        let raw_x = rng.gen::<f64>();
+        let raw_y = rng.gen::<f64>();
+
+        let x = Val::new(raw_x);
+        let y = Val::new(raw_y);
+
+        let result = &x / &y;
+        assert_eq!(result, raw_x / raw_y);
+        assert_eq!(result.prev, vec![x, y])
     }
 }
