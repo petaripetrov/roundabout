@@ -11,8 +11,8 @@ fn main() {
     let f = Val::from(-2.0);
     let l = d * f;
 
-    let l1 = l.data;
+    // let l1 = l.data;
 
-    l.print();
-    println!("{}", l1);
+    // l.print();
+    println!("{}", l.data());
 }

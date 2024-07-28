@@ -19,7 +19,7 @@ fn main() {
     let x2w2 = x2*w2;
     let x1w1x2w2 = x1w1 + x2w2;
     let n = x1w1x2w2 + b;
-    let o = n.tanh();
+    // let o = n.tanh();
 
-    print!("{}", o.data)
+    // print!("{}", o.data)
 }
