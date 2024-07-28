@@ -12,6 +12,14 @@ pub struct Data {
     pub label: Option<String>,
 }
 
+// TODO rewrite so this makes more sense
+// During the backpropagation process we need to borrow various Val objects
+// that may or may not be owned by something else. Because of this, we need to use
+// Rc<RefCell<Data> or a different wrapper class that allows multiple borrows
+// This could also be done via an Arena, but would make it difficult to allow for basic 
+// tensor operations as we would need a GLOBAL arena to allocate Vals. However, we can
+// put an arena on a Model struct and force allocation through that, preventing the possibility
+// of Rc leaking memory (which is possible in some cyclic dependencies).
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Val(Rc<RefCell<Data>>);
 
