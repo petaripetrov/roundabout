@@ -1,6 +1,6 @@
-use std::{cell::RefCell, hash::Hash, ops::Deref, rc::Rc};
+use std::{cell::{Ref, RefCell}, hash::Hash, ops::Deref, rc::Rc};
 
-pub type PropFn = fn(value: &mut Data);
+pub type PropFn = fn(value: &Ref<Data>);
 
 #[derive(Debug, Clone)]
 pub struct Data {
@@ -30,6 +30,26 @@ impl Val {
 
     pub fn data(&self) -> f64 {
         self.0.borrow().data
+    }
+
+    pub fn tanh(self) -> Val {
+        let x = self.data();
+        let new_data = ((2.0*x).exp_m1())/((2.0*x).exp() + 1.0);
+
+        let prop_fn: PropFn = |value| {
+            let mut prev = value.prev[0].borrow_mut();
+
+            prev.grad += (1.0 - value.data.powf(2.0)) * value.grad;
+        };
+
+        Val::new(Data {
+            data: new_data,
+            grad: 0.0,
+            prev: vec![self.clone()],
+            prop: Some(prop_fn),
+            op: None,
+            label: None,
+        })
     }
 }
 

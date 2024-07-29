@@ -14,12 +14,14 @@ fn main() {
     // bias of the neuron
     let b = Val::from(6.8813735870195432); // nice number for testing 
 
-    //x1*w1 + x2*w2 + b
+    // x1*w1 + x2*w2 + b
     let x1w1 = x1*w1;
     let x2w2 = x2*w2;
-    let x1w1x2w2 = x1w1 + x2w2;
-    let n = x1w1x2w2 + b;
-    // let o = n.tanh();
+    let x1w1x2w2 = x1w1.clone() + x2w2;
+    let n = x1w1x2w2.clone() + b;
+    let o = n.clone().tanh();
 
-    // print!("{}", o.data)
+    println!("{}", o.data());
+
+    println!("Grad is: {}", x1w1.borrow().grad)
 }
