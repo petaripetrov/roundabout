@@ -10,15 +10,12 @@ impl Add for Val {
     fn add(self, rhs: Self) -> Self::Output {
 
         let prop_fn: PropFn = |value| {
-            let mut first = value.prev[0].borrow_mut();
-            let mut second = value.prev[1].borrow_mut();
-            
-            println!("{}", value.grad);
-
-            first.grad += value.grad;
-            second.grad += value.grad;
-
-            println!("{}", second.grad);
+            for el in value.prev.iter() {
+                // Have to iterate over each element to make sure we do not
+                // borrow the same Val twice (i.e. b = a + a)
+                let mut borrowed = el.borrow_mut();
+                borrowed.grad += value.grad;
+            }
         };
 
         Val::new(Data {
@@ -53,11 +50,14 @@ impl Mul for Val {
     fn mul(self, rhs: Self) -> Self::Output {
 
         let prop_fn: PropFn = |value| {
-            let mut first = value.prev[0].borrow_mut();
-            let mut second = value.prev[1].borrow_mut();
+            // Ditto Add
+            let mut data: Vec<f64> = value.prev.iter().map(|v| v.borrow().data).collect();
 
-            first.grad += second.data * value.grad;
-            second.grad += first.data * value.grad;
+            for el in value.prev.iter() {
+                let mut borrowed = el.borrow_mut();
+
+                borrowed.grad += data.pop().unwrap() * value.grad;
+            }
         };
 
         Val::new(Data {
