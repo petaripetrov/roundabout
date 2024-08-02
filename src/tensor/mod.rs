@@ -24,6 +24,38 @@ impl Tensor {
             shape,
         }
     }
+
+    pub fn transpose(&self) -> Tensor {
+        let mut out = vec![];
+        let (x, y) = self.shape;
+
+        for col in 0..y {
+            for row in 0..x {
+                out.push(self.data[y * row + col])
+            }
+        }
+
+        Tensor::new(out, (y, x))
+    }
+
+    pub fn resize(&self, size: (usize, usize)) -> Tensor {
+        if size.0 * size.1 != self.data.len() {
+            // TODO check if this can be a compiler error and add some
+            // formatting explaining this
+            panic!("New size is not compatible with data");
+        }
+
+        let mut out = vec![];
+        let (x, y) = size;
+
+        for row in 0..x {
+            for col in 0..y {
+                out.push(self.data[y * row + col])
+            }
+        }
+
+        Tensor::new(out, size)
+    }
 }
 
 impl fmt::Display for Tensor {
@@ -34,9 +66,9 @@ impl fmt::Display for Tensor {
 
         write!(f, "data=[").unwrap();
         for row in 0..x {
-            write!(f, "[").unwrap();
+            write!(f, "\n[").unwrap();
             for col in 0..y {
-                let delim = if col != y - 1 {","} else {""};
+                let delim = if col != y - 1 { "," } else { "" };
                 write!(f, "{}{delim}", self.data[y * row + col]).unwrap();
             }
             write!(f, "]").unwrap();
@@ -106,5 +138,25 @@ mod tests {
         let string = format!("{}", x);
 
         assert_eq!(string, "Tensor(data=[[1,1,0][1,1,1]], shape=(2, 3))")
+    }
+
+    #[test]
+    fn transpose_same_shape() {
+        let x = Tensor::new(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0], (3, 3));
+
+        assert_eq!(
+            x.transpose().data,
+            vec![1.0, 4.0, 7.0, 2.0, 5.0, 8.0, 3.0, 6.0, 9.0]
+        )
+    }
+
+    #[test]
+    fn transpose_diff_shape() {
+        let x = Tensor::new(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], (2, 4));
+
+        assert_eq!(
+            x.transpose().data,
+            vec![1.0, 5.0, 2.0, 6.0, 3.0, 7.0, 4.0, 8.0]
+        )
     }
 }
