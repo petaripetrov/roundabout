@@ -137,7 +137,7 @@ mod tests {
 
         let string = format!("{}", x);
 
-        assert_eq!(string, "Tensor(data=[[1,1,0][1,1,1]], shape=(2, 3))")
+        assert_eq!(string, "Tensor(data=[\n[1,1,0]\n[1,1,1]], shape=(2, 3))")
     }
 
     #[test]
