@@ -39,6 +39,26 @@ impl Val {
         self.0.borrow().data
     }
 
+    pub fn relu(self) -> Val {
+        let data = self.data().max(0.0);
+
+        let prop_fn: PropFn = |value| {
+            let mut prev = value.prev[0].borrow_mut();
+            let factor = if value.data > 0.0 { 1.0 } else { 0.0 };
+
+            prev.grad += factor * value.grad;
+        };
+
+        Val::new(Data {
+            data,
+            grad: 0.0,
+            prev: vec![self.clone()],
+            prop: Some(prop_fn),
+            op: None,
+            label: None,
+        })
+    }
+
     pub fn tanh(self) -> Val {
         let x = self.data();
         let new_data = ((2.0 * x).exp_m1()) / ((2.0 * x).exp() + 1.0);
@@ -112,6 +132,26 @@ impl Val {
 
             topo.push(value.clone());
         }
+    }
+
+    pub fn pow(&self, exp: Val) -> Val {
+        let res = self.borrow().data.powf(exp.borrow().data);
+
+        let prop_fn: PropFn = |value| {
+            let power = value.prev[1].borrow().data;
+            let mut base = value.prev[0].borrow_mut();
+
+            base.grad += power * (base.data.powf(power - 1.0)) * value.grad;
+        };
+
+        Val::new(Data {
+            data: res,
+            grad: 0.0,
+            prev: vec![self.clone(), exp.clone()],
+            prop: Some(prop_fn),
+            op: Some("^".to_string()),
+            label: None,
+        })
     }
 }
 
