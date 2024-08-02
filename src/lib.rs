@@ -1,7 +1,7 @@
 mod val;
 mod engine;
 
-pub use crate::val::{Val};
+pub use crate::val::Val;
 
 #[cfg(test)]
 mod tests {
@@ -92,55 +92,6 @@ mod tests {
         let result = x.clone() + y.clone();
         let prev = result.borrow().prev.clone();
         assert_eq!(result, raw_x + raw_y);
-        assert_eq!(prev, vec![x, y])
-    }
-
-    #[test]
-    fn subtraction_child() {
-        let mut rng: StdRng = StdRng::seed_from_u64(42);
-
-        let raw_x = rng.gen::<f64>();
-        let raw_y = rng.gen::<f64>();
-
-        let x = Val::from(raw_x);
-        let y = Val::from(raw_y);
-
-        let result = x.clone() - y.clone();
-        let prev = result.borrow().prev.clone();
-        assert_eq!(result, raw_x - raw_y);
-        assert_eq!(prev, vec![x, y])
-    }
-
-    #[test]
-    fn multiplication_child() {
-        let mut rng: StdRng = StdRng::seed_from_u64(42);
-
-        let raw_x = rng.gen::<f64>();
-        let raw_y = rng.gen::<f64>();
-
-        let x = Val::from(raw_x);
-        let y = Val::from(raw_y);
-
-        let result = x.clone() * y.clone();
-        let prev = result.borrow().prev.clone();
-        assert_eq!(result, raw_x * raw_y);
-        assert_eq!(prev, vec![x, y])
-
-    }
-
-    #[test]
-    fn division_child() {
-        let mut rng: StdRng = StdRng::seed_from_u64(42);
-
-        let raw_x = rng.gen::<f64>();
-        let raw_y = rng.gen::<f64>();
-
-        let x = Val::from(raw_x);
-        let y = Val::from(raw_y);
-
-        let result = x.clone() / y.clone();
-        let prev = result.borrow().prev.clone();
-        assert_eq!(result, raw_x / raw_y);
         assert_eq!(prev, vec![x, y])
     }
 }

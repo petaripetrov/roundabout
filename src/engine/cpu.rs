@@ -1,4 +1,4 @@
-use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 use crate::{val::{Data, PropFn}, Val};
 
@@ -33,14 +33,7 @@ impl Sub for Val {
     type Output = Val;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Val::new(Data {
-            data: self.borrow().data - rhs.borrow().data,
-            grad: 0.0,
-            prev: vec![self.clone(), rhs.clone()],
-            prop: None,
-            op: Some("-".to_owned()),
-            label: None,
-        })
+        self + (-rhs)
     }
 }
 
@@ -75,13 +68,14 @@ impl Div for Val {
     type Output = Val;
 
     fn div(self, rhs: Self) -> Self::Output {
-        Val::new(Data {
-            data: self.borrow().data / rhs.borrow().data,
-            grad: 0.0,
-            prev: vec![self.clone(), rhs.clone()],
-            prop: None,
-            op: Some("-".to_owned()),
-            label: None,
-        })
+        self * rhs.pow(Val::from(-1))
+    }
+}
+
+impl Neg for Val {
+    type Output = Val;
+
+    fn neg(self) -> Self::Output {
+        self * Val::from(-1)
     }
 }
