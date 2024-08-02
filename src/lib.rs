@@ -1,7 +1,9 @@
 mod val;
 mod engine;
+mod tensor;
 
 pub use crate::val::Val;
+pub use crate::tensor::Tensor;
 
 #[cfg(test)]
 mod tests {
